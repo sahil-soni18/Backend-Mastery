@@ -1,33 +1,39 @@
 export default (sequelize, DataTypes) => {
-  const User = sequelize.define(
-    "User",
+  const Post = sequelize.define(
+    "Post",
     {
       id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
       },
-      name: {
+      title: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
+      },
+      content: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+      },
+      userId: {
+        type: DataTypes.UUID,
+        allowNull: false,
       },
     },
     {
       timestamps: true,
       paranoid: true,
       underscored: true,
-      tableName: "users",
+      tableName: "posts",
     }
   );
 
-  User.associate = (models) => {
-    User.hasMany(models.Post, {
+  Post.associate = (models) => {
+    Post.belongsTo(models.User, {
       foreignKey: "userId",
-      as: "posts",
-      onDelete: "CASCADE", 
+      as: "author",
     });
   };
 
-  return User;
+  return Post;
 };
